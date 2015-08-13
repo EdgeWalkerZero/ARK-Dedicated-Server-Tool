@@ -21,6 +21,14 @@ namespace ARK_Server_Manager.Lib
             }
         }
 
+        public void AddRange(IEnumerable<T> values)
+        {
+            foreach (var value in values)
+            {
+                base.Add(value);
+            }
+        }
+
         public string IniCollectionKey { get; }
 
         private Func<IEnumerable<T>> resetFunc;
@@ -31,13 +39,6 @@ namespace ARK_Server_Manager.Lib
             this.resetFunc = resetFunc;
         }
 
-        public void AddRange(IEnumerable<T> spawns)
-        {
-            foreach (var spawn in spawns)
-            {
-                base.Add(spawn);
-            }
-        }
 
         public void Reset()
         {
@@ -58,12 +59,11 @@ namespace ARK_Server_Manager.Lib
             this.AddRange(iniValues.Select(v => AggregateIniValue.FromINIValue<T>(v)));
             this.IsEnabled = (this.Count != 0);
 
-            // If we initialized from the INI but read no values, populate from defaults, but leave this "disabled"
-            if(this.Count == 0)
-            {
-                Reset();
-            }
+            // Add any default values which were missing
+            var defaultItemsToAdd = this.resetFunc().Where(r => !this.Any(v => v.IsEquivalent(r))).ToArray();
+            this.AddRange(defaultItemsToAdd);
+
+            this.Sort(AggregateIniValue.SortKeySelector);
         }
     }
-
 }

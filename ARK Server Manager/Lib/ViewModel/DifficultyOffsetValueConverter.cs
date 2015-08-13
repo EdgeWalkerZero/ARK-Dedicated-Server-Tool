@@ -6,7 +6,7 @@ namespace ARK_Server_Manager.Lib.ViewModel
     public class DifficultyOffsetValueConverter : IValueConverter
     {
         public const double MinValue = 50;
-        public const double MaxValue = 300;
+        public const double MaxValue = 400;
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
@@ -21,7 +21,7 @@ namespace ARK_Server_Manager.Lib.ViewModel
             var sliderValue = System.Convert.ToDouble(value);
             sliderValue = (double)sliderValue - (double)MinValue;
             var scaledValue = sliderValue / (double)(MaxValue - MinValue);
-            scaledValue = Math.Max(0, scaledValue);
+            scaledValue = Math.Max(0.01, scaledValue);
             return scaledValue;
         }
     }

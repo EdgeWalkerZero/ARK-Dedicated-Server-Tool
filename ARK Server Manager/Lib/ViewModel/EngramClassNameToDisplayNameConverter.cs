@@ -4,15 +4,21 @@ using System.Windows.Data;
 
 namespace ARK_Server_Manager.Lib.ViewModel
 {
-    public class ResourceNameValueConverter : IValueConverter
+    public class EngramClassNameToDisplayNameConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var strVal = value as string;
-            var firstIndex = strVal.IndexOf('_');
-            var lastIndex = strVal.LastIndexOf('_');
-            var subStr = strVal.Substring(firstIndex + 1, lastIndex - firstIndex - 1).Replace('_', ' ');
-            return subStr;
+            try
+            {
+                var strVal = value as string;
+                var firstIndex = strVal.IndexOf('_') + 1;
+                var length = strVal.LastIndexOf('_') - firstIndex;
+                return strVal.Substring(firstIndex, length);
+            }
+            catch
+            {
+                return value;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
